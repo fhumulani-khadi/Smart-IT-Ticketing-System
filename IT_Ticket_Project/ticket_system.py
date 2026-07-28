@@ -4,12 +4,12 @@ from datetime import datetime
 
 tickets = []
 
-# ================= ADD TICKET =================
+# ================= 1. ADD TICKET =================
 def add_ticket():
-    tech = input("Technician name: ").lower()
-    store = input("Store name: ")
-    ttype = input("Type (KDS / DayEnd / Online / MX): ")
-    status = input("Status (Closed / OnHold / Onsite / Open): ").lower()
+    tech = input("Technician name: ").lower().strip()
+    store = input("Store name: ").strip()
+    ttype = input("Type (KDS / DayEnd / Online Ordering / MX / Network / Till Issue): ").strip()
+    status = input("Status (Closed / OnHold / Onsite / Open / In Progress): ").lower().strip()
 
     ticket = {
         "tech": tech,
@@ -21,159 +21,152 @@ def add_ticket():
     }
 
     tickets.append(ticket)
-    print("✅ Ticket logged.\n")
+    print("[INFO] Ticket logged successfully.\n")
 
 
-# ================= TECHNICIAN SHIFT REPORT =================
+# ================= 2. TECHNICIAN SHIFT REPORT =================
 def shift_report():
     if not tickets:
-        print("No tickets logged yet.\n")
+        print("[INFO] No tickets logged yet.\n")
         return
 
     print("\n===== TECHNICIAN SHIFT REPORT =====")
-
     shifts = set((t["tech"], t["shift_date"]) for t in tickets)
 
     for tech, date in shifts:
-        closed = sum(1 for t in tickets if t["tech"] == tech and t["shift_date"] == date and t["status"] == "closed")
-        onhold = sum(1 for t in tickets if t["tech"] == tech and t["shift_date"] == date and t["status"] == "onhold")
-        onsite = sum(1 for t in tickets if t["tech"] == tech and t["shift_date"] == date and t["status"] == "onsite")
-
-        total = closed + onhold + onsite
-
+        tech_tickets = [t for t in tickets if t["tech"] == tech and t["shift_date"] == date]
         print(f"\nTechnician: {tech.title()} | Date: {date}")
-        print("Closed:", closed)
-        print("OnHold:", onhold)
-        print("Onsite:", onsite)
-        print("Total Worked:", total)
+        
+        status_counts = {}
+        for t in tech_tickets:
+            st = t["status"].title()
+            status_counts[st] = status_counts.get(st, 0) + 1
+            
+        for status_name, count in status_counts.items():
+            print(f"  {status_name}: {count}")
+            
+        print(f"Total Worked: {len(tech_tickets)}")
 
 
-# ================= GRAPH PER TECH =================
-def tech_graph():
-    tech_name = input("Enter technician name: ").lower()
-
-    closed = sum(1 for t in tickets if t["tech"] == tech_name and t["status"] == "closed")
-    onhold = sum(1 for t in tickets if t["tech"] == tech_name and t["status"] == "onhold")
-    onsite = sum(1 for t in tickets if t["tech"] == tech_name and t["status"] == "onsite")
-
-    plt.figure()
-    plt.bar(["Closed", "OnHold", "Onsite"], [closed, onhold, onsite])
-    plt.title(f"{tech_name.title()} Performance")
-    plt.ylabel("Tickets Worked")
-    plt.show()
-
-
-# ================= GRAPH PER SHIFT =================
-def shift_graph():
+# ================= 3. PERFORMANCE GRAPH (VERY THIN BAR FIX) =================
+def performance_graph():
     if not tickets:
-        print("No tickets logged.\n")
+        print("[INFO] No tickets logged yet to display on graph.\n")
         return
 
-    tech_name = input("Enter technician name: ").lower()
-
-    shifts = set(t["shift_date"] for t in tickets if t["tech"] == tech_name)
-
-    for date in shifts:
-        closed = sum(1 for t in tickets if t["tech"] == tech_name and t["shift_date"] == date and t["status"] == "closed")
-        onhold = sum(1 for t in tickets if t["tech"] == tech_name and t["shift_date"] == date and t["status"] == "onhold")
-        onsite = sum(1 for t in tickets if t["tech"] == tech_name and t["shift_date"] == date and t["status"] == "onsite")
-
-        plt.figure()
-        plt.bar(["Closed", "OnHold", "Onsite"], [closed, onhold, onsite])
-        plt.title(f"{tech_name.title()} Shift {date}")
-        plt.ylabel("Tickets Worked")
-        plt.show()
-
-
-# ================= GRAPH ALL TECH =================
-def all_tech_graph():
-    techs = set(t["tech"] for t in tickets)
-
-    names = []
-    totals = []
+    techs = list(set(t["tech"].title() for t in tickets))
+    
+    closed_counts = []
+    onsite_counts = []
+    other_counts = []
 
     for tech in techs:
-        total = sum(1 for t in tickets if t["tech"] == tech)
-        names.append(tech.title())
-        totals.append(total)
+        t_lower = tech.lower().strip()
+        closed = sum(1 for t in tickets if t["tech"].lower().strip() == t_lower and t["status"].lower().strip() == "closed")
+        onsite = sum(1 for t in tickets if t["tech"].lower().strip() == t_lower and t["status"].lower().strip() == "onsite")
+        other = sum(1 for t in tickets if t["tech"].lower().strip() == t_lower and t["status"].lower().strip() not in ["closed", "onsite"])
+        
+        closed_counts.append(closed)
+        onsite_counts.append(onsite)
+        other_counts.append(other)
 
-    plt.figure()
-    plt.bar(names, totals)
-    plt.title("All Technicians Performance")
-    plt.xticks(rotation=45)
-    plt.ylabel("Total Tickets Worked")
+    plt.figure(figsize=(7, 5))
+    
+    # Very small bar width to keep the column nice and thin
+    bar_width = 0.08
+
+    # Stacked bars: Closed (bottom), Onsite (middle), Other (top)
+    plt.bar(techs, closed_counts, width=bar_width, color='#002060', label='Closed')
+    plt.bar(techs, onsite_counts, width=bar_width, bottom=closed_counts, color='#0070C0', label='Onsite')
+    
+    bottom_other = [c + o for c, o in zip(closed_counts, onsite_counts)]
+    plt.bar(techs, other_counts, width=bar_width, bottom=bottom_other, color='#8EA9DB', label='OnHold / Open / In Progress')
+
+    plt.title("Technician Performance Breakdown", fontsize=12, fontweight='bold')
+    plt.xlabel("Technicians", fontsize=10)
+    plt.ylabel("Number of Tickets", fontsize=10)
+    
+    # Stops Matplotlib from stretching a single bar across the whole window
+    if len(techs) == 1:
+        plt.xlim(-0.5, 0.5)
+
+    # Use whole numbers for Y-axis (0, 1, 2...)
+    max_val = max([c + o + ot for c, o, ot in zip(closed_counts, onsite_counts, other_counts)] or [1])
+    plt.yticks(range(0, max_val + 2))
+    
+    plt.legend(loc='upper right')
+    plt.tight_layout()
     plt.show()
 
 
-# ================= EXPORT TO EXCEL =================
+# ================= 4. EXPORT TO EXCEL =================
 def export_excel():
     if not tickets:
-        print("No tickets to export.\n")
+        print("[INFO] No tickets to export.\n")
         return
 
     wb = Workbook()
     ws = wb.active
     ws.title = "Ticket Report"
 
-    ws.append(["Technician", "Store", "Type", "Status", "Shift Date", "Time"])
+    ws.append(["Technician", "Store", "Type", "Status", "Shift Date", "Time Logged"])
 
     for t in tickets:
         ws.append([
-            t["tech"],
+            t["tech"].title(),
             t["store"],
             t["type"],
-            t["status"],
+            t["status"].capitalize(),
             str(t["shift_date"]),
-            str(t["time"])
+            str(t["time"].strftime("%Y-%m-%d %H:%M:%S"))
         ])
 
     wb.save("ticket_report.xlsx")
-    print("📁 Excel report saved as ticket_report.xlsx\n")
+    print("[INFO] Excel report exported successfully as 'ticket_report.xlsx'\n")
 
 
-# ================= SLA ALERT =================
+# ================= 5. SLA ALERT =================
 def sla_alert():
     now = datetime.now()
-    print("\n===== SLA ALERTS (24+ Hours Open) =====")
+    print("\n===== SLA ALERTS (20+ Hours Open) =====")
 
+    found = False
     for t in tickets:
         hours = (now - t["time"]).total_seconds() / 3600
-        if hours >= 24 and t["status"] != "closed":
-            print(f"⚠ {t['tech']} | {t['store']} | {t['type']} | {round(hours,1)} hrs open")
+        if hours >= 20 and t["status"] != "closed":
+            print(f"[WARNING] Tech: {t['tech'].title()} | Store: {t['store']} | Type: {t['type']} | Open for {round(hours, 1)} hrs")
+            found = True
 
-    print("Done.\n")
+    if not found:
+        print("[INFO] No SLA breaches found.")
+
+    print("[INFO] SLA check complete.\n")
 
 
-# ================= MENU =================
+# ================= MAIN MENU LOOP =================
 while True:
     print("\n===== SMART IT TICKET SYSTEM =====")
-    print("1 Add Ticket")
-    print("2 Technician Shift Report")
-    print("3 Technician Graph")
-    print("4 Graph Per Shift")
-    print("5 Graph All Technicians")
-    print("6 Export to Excel")
-    print("7 SLA Alerts")
-    print("8 Exit")
+    print("1. Add Ticket")
+    print("2. Shift Report")
+    print("3. View Performance Graph")
+    print("4. Export to Excel")
+    print("5. SLA Alerts")
+    print("6. Exit")
 
-    choice = input("Choose option: ")
+    choice = input("Choose option (1-6): ").strip()
 
     if choice == "1":
         add_ticket()
     elif choice == "2":
         shift_report()
     elif choice == "3":
-        tech_graph()
+        performance_graph()
     elif choice == "4":
-        shift_graph()
-    elif choice == "5":
-        all_tech_graph()
-    elif choice == "6":
         export_excel()
-    elif choice == "7":
+    elif choice == "5":
         sla_alert()
-    elif choice == "8":
-        print("Goodbye 👋")
+    elif choice == "6":
+        print("[INFO] System exiting. Goodbye!")
         break
     else:
-        print("Invalid option.\n")
+        print("[ERROR] Invalid selection. Choose an option from 1 to 6.\n")
