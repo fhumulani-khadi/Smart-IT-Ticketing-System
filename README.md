@@ -1,6 +1,6 @@
 # Smart IT Ticket System (CLI Service Desk & SLA Tracker)
 
-> **Project Started:** 01 March 2026 | **Tech Stack:** Python 3, `datetime`, `matplotlib`, `openpyxl`
+> **Tech Stack:** Python 3 (`datetime`, `matplotlib`, `openpyxl`) | **Focus:** IT Service Desk Automation, Incident Triage & SLA Tracking
 
 ## 1. Executive Summary & Project Purpose
 I designed and built the **Smart IT Ticket System** to solve a common operational challenge in multi-site IT service desk environments: **tracking incident response times, technician productivity, and SLA compliance in real time.**
