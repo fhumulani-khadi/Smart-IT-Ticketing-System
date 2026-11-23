@@ -1,7 +1,6 @@
 # Smart IT Ticket System (CLI Service Desk & SLA Tracker)
 
-> **Project Started:** 01 March 2026 | **Tech Stack:** Python 3, `datetime`, `matplotlib`, `openpyxl`  
-> 📄 **[View Full Visual Walkthrough Manual (PDF)](./docs/Smart_IT_Ticket_System_Manual.pdf)**
+> **Project Started:** 01 March 2026 | **Tech Stack:** Python 3, `datetime`, `matplotlib`, `openpyxl`
 
 ## 1. Executive Summary & Project Purpose
 I designed and built the **Smart IT Ticket System** to solve a common operational challenge in multi-site IT service desk environments: **tracking incident response times, technician productivity, and SLA compliance in real time.**
@@ -55,7 +54,7 @@ pip install matplotlib openpyxl
 ### Run the Application
 ```bash
 git clone https://github.com
-cd smart-it-ticket-system
+cd Smart-IT-Ticketing-System/IT_Ticket_Project
 python ticket_system.py
 ```
 
@@ -82,10 +81,19 @@ Status (Closed / OnHold / Onsite / Open / In Progress): Open
 
 ### Step 2: Automated Shift Summary & Excel Export
 * **Option 2 (`Shift Report`):** Displays live open vs. total worked tickets per technician.
-* **Option 4 (`Export to Excel`):** Generates `ticket_report.xlsx` with columns for `Technician`, `Store`, `Type`, `Status`, `Shift Date`, and `Time Logged`.
+* **Option 4 (`Export to Excel`):** Generates `ticket_report.xlsx` with structured columns (`Technician`, `Store`, `Type`, `Status`, `Shift Date`, `Time Logged`).
+
+```text
+===== TECHNICIAN SHIFT REPORT =====
+
+Technician: Fhumulani | Date: 2026-07-27
+  Open: 1
+Total Worked: 1
+[INFO] Excel report exported successfully as 'ticket_report.xlsx'
+```
 
 ### Step 3: Visual Performance Analytics
-* **Option 3 (`View Performance Graph`):** Opens an interactive `matplotlib` stacked bar chart breaking down each technician's `Closed`, `Onsite`, and `Open / OnHold` tickets.
+* **Option 3 (`View Performance Graph`):** Generates an interactive `matplotlib` stacked bar chart visualizing technician workload distribution across `Closed`, `Onsite`, and `OnHold / Open / In Progress` tickets.
 
 ---
 
