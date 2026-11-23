@@ -43,57 +43,49 @@ flowchart TD
 
 ---
 
-## 4. Installation & Execution
+## 4. Execution Process
 
 ### Prerequisites
-Ensure Python 3 is installed along with the required reporting libraries:
 ```bash
 pip install matplotlib openpyxl
 ```
 
-### Run the Application
+### Run the Program
 ```bash
 git clone https://github.com
 cd Smart-IT-Ticketing-System/IT_Ticket_Project
 python ticket_system.py
 ```
 
+The main menu appears:
+
+<img width="975" height="353" alt="image" src="https://github.com/user-attachments/assets/8cbbb112-c946-4e66-a18f-ef312d3360ee" />
+
+
 ---
 
 ## 5. System Output Walkthrough
 
 ### Step 1: Application Menu & Data Entry
-```text
-===== SMART IT TICKET SYSTEM =====
-1. Add Ticket
-2. Shift Report
-3. View Performance Graph
-4. Export to Excel
-5. SLA Alerts
-6. Exit
-Choose option (1-6): 1
-Technician name: Fhumulani
-Store name: Store Branch 01
-Type (KDS / DayEnd / Online Ordering / MX / Network / Till Issue): Till Issue
-Status (Closed / OnHold / Onsite / Open / In Progress): Open
-[INFO] Ticket logged successfully.
-```
+
+<img width="975" height="350" alt="image" src="https://github.com/user-attachments/assets/a6ed2edb-5737-4bf8-81ce-dc080851155e" />
+
 
 ### Step 2: Automated Shift Summary & Excel Export
-* **Option 2 (`Shift Report`):** Displays live open vs. total worked tickets per technician.
-* **Option 4 (`Export to Excel`):** Generates `ticket_report.xlsx` with structured columns (`Technician`, `Store`, `Type`, `Status`, `Shift Date`, `Time Logged`).
+Generated Spreadsheet Data (`ticket_report.xlsx`):
 
-```text
-===== TECHNICIAN SHIFT REPORT =====
+<img width="973" height="386" alt="image" src="https://github.com/user-attachments/assets/4779742e-6fd1-47d1-90cd-08e3c41b7c83" />
+<img width="975" height="202" alt="image" src="https://github.com/user-attachments/assets/53c699a8-1103-4ade-8070-ed0b980f7f21" />
 
-Technician: Fhumulani | Date: 2026-07-27
-  Open: 1
-Total Worked: 1
-[INFO] Excel report exported successfully as 'ticket_report.xlsx'
-```
+
 
 ### Step 3: Visual Performance Analytics
-* **Option 3 (`View Performance Graph`):** Generates an interactive `matplotlib` stacked bar chart visualizing technician workload distribution across `Closed`, `Onsite`, and `OnHold / Open / In Progress` tickets.
+Selecting Option 3 generates an interactive graph visualizing workload distribution per technician.
+
+**Custom Features:** Fixed bar widths, custom color palette for statuses, and non-decimal Y-axis scaling.
+
+<img width="975" height="337" alt="image" src="https://github.com/user-attachments/assets/580ab2dd-3315-4985-94ac-ff98a43ca3b1" />
+
 
 ---
 
