@@ -3,7 +3,7 @@
 > **Tech Stack:** Python 3 (`datetime`, `matplotlib`, `openpyxl`) | **Focus:** IT Service Desk Automation, Incident Triage & SLA Tracking
 
 ## 1. Executive Summary & Project Purpose
-I designed and built the **Smart IT Ticket System** to solve a common operational challenge in multi-site IT service desk environments: **tracking incident response times, technician productivity, and SLA compliance in real time.**
+Designed and built the **Smart IT Ticket System** to solve a common operational challenge in multi-site IT service desk environments: **tracking incident response times, technician productivity, and SLA compliance in real time.**
 
 This tool provides a lightweight Command-Line Interface (CLI) for logging retail/store technical issues (`Till`, `KDS`, `Network`, `DayEnd`, `Online Ordering`, `MX`), generating instant technician shift summaries, exporting structured Excel reports, and flagging open tickets before they breach a **24-hour SLA**.
 
